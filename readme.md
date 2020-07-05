@@ -10,6 +10,6 @@
 $ npm start CHAPTER_NUMBER [server | client]
 ```
 
-| chapter | name |
-| :-----: | ---- |
-
+| chapter | name                        |
+| :-----: | --------------------------- |
+|    1    | Hello, `TypeScript + gRPC`! |

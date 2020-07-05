@@ -1,0 +1,27 @@
+//
+// Proto3 문법을 사용한다고 명세한다.
+syntax = "proto3";
+
+//
+// 패키지 이름
+package hello;
+
+//
+// 요청 객체
+message HelloRequest {
+    string name = 1;
+}
+
+//
+// 응답 객체
+message HelloResponse {
+    string message = 1;
+}
+
+//
+// 서비스 명세
+service HelloService {
+    //
+    // 서비스에 속한 함수.
+    rpc hello (HelloRequest) returns (HelloResponse);
+}
