@@ -1,4 +1,4 @@
-async function bootstrap() {
+async function start() {
     try {
         /**
          * 두 자리 정수로 변환한다.
@@ -33,4 +33,4 @@ async function bootstrap() {
         console.error(e);
     }
 }
-bootstrap();
+start();
