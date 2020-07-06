@@ -1,0 +1,78 @@
+//
+// Chapter 02
+//    스칼라 자료형
+
+//
+// 프로토3 문법을 사용한다고 지정한다.
+// 이것을 생략할 경우 프로토2 문법으로 해석한다.
+syntax = "proto3";
+
+//
+// 패키지 이름 (= 네임스페이스)
+// 다른 프로토 파일과 구분되도록 할 것.
+package chapter02;
+
+//
+// 요청 메세지
+message Echo1Object {
+    double d = 1;
+    float f = 2;
+    int32 i32 = 3;
+    int64 i64 = 4;
+    uint32 ui32 = 5;
+    uint64 ui64 = 6;
+    sint32 si32 = 7;
+    sint64 si64 = 8;
+    fixed32 fix32 = 9;
+    fixed64 fix64 = 10;
+    sfixed32 sfix32 = 11;
+    sfixed64 sfix64 = 12;
+    bool b = 13;
+    string s = 14;
+    bytes bytes = 15; 
+}
+
+//
+// 내부 메세지 1
+message InnerMessage1 {
+    int32 a = 1;
+    int32 b = 2;
+}
+
+//
+// 내부 메세지 2
+message InnerMessage2 {
+    int32 x = 1;
+    int32 y = 2;
+}
+
+//
+// 사용자 정의 열거형.
+enum Direction {
+    up = 0; // 첫 값은 항상 0이어야 한다.
+    down = 1;
+    left = 2;
+    right = 999;
+}
+
+//
+// 내부 메세지 1, 2를 포함하는 외부 메세지.
+message Echo2Object {
+    InnerMessage1 m1 = 1;
+    InnerMessage2 m2 = 2;
+    Direction direction = 3;
+}
+
+//
+// 정수형 배열 메세지.
+message Echo3Object {
+    repeated int32 x = 1;
+}
+
+//
+// 서비스 명세
+service Echo {
+    rpc echo1 (Echo1Object) returns (Echo1Object);
+    rpc echo2 (Echo2Object) returns (Echo2Object);
+    rpc echo3 (Echo3Object) returns (Echo3Object);
+}
