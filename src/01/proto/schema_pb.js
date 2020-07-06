@@ -1,4 +1,4 @@
-// source: src/01/proto/hello.proto
+// source: schema.proto
 /**
  * @fileoverview
  * @enhanceable

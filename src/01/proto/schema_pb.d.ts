@@ -1,5 +1,5 @@
 // package: hello
-// file: src/01/proto/hello.proto
+// file: schema.proto
 
 import * as jspb from "google-protobuf";
 

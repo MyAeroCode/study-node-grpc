@@ -1,5 +1,5 @@
-import messages from "./proto/hello_pb";
-import services from "./proto/hello_grpc_pb";
+import messages from "./proto/schema_pb";
+import services from "./proto/schema_grpc_pb";
 import grpc from "grpc";
 
 export default function startServer() {
