@@ -1,0 +1,39 @@
+//
+// Chapter 05
+//    Reserved, Deprecated
+
+//
+// 프로토3 문법을 사용한다고 지정한다.
+// 이것을 생략할 경우 프로토2 문법으로 해석한다.
+syntax = "proto3";
+
+//
+// 패키지 이름 (= 네임스페이스)
+// 다른 프로토 파일과 구분되도록 할 것.
+package chapter05;
+
+//
+// 요청 메세지
+message EchoObject {
+    //
+    // 필드 번호로 예약.
+    reserved 1, 3, 5, 50 to 100; 
+
+    //
+    // 필드 이름으로 예약.
+    reserved "b", "d";
+
+    // string a = 1; >> 예약된 번호를 사용하므로 에러 발생.
+    // string b = 2; >> 예약된 이름을 사용하므로 에러 발생.
+    // string c = 3; >> 예약된 번호.
+    // string d = 4; >> 예약된 이름.
+    // string e = 5; >> 예약된 번호.
+    string f = 6 ;
+    string g = 7 [deprecated = true];
+}
+
+//
+// 서비스 명세
+service Echo {
+    rpc echo (EchoObject) returns (EchoObject);
+}
