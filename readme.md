@@ -28,3 +28,4 @@ $ npm run-script build CHAPTER_NUMBER
 | :-----: | ------------------------------ |
 |    1    | Hello, `TypeScript + gRPC`!    |
 |    2    | `Message`, `Scalar Data Types` |
+|    3    | `Other Data Types`             |

@@ -1,0 +1,34 @@
+//
+// Chapter 03
+//    다른 데이터 타입
+
+//
+// 프로토3 문법을 사용한다고 지정한다.
+// 이것을 생략할 경우 프로토2 문법으로 해석한다.
+syntax = "proto3";
+
+//
+// 패키지 이름 (= 네임스페이스)
+// 다른 프로토 파일과 구분되도록 할 것.
+package chapter03;
+
+//
+// 기타 자료형을 사용하기 위한 import 문장.
+import "google/protobuf/any.proto";
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+//
+// 요청 메세지
+message EchoObject {
+    map<string, int32> dictionary = 1;
+    google.protobuf.Any any = 2;
+    google.protobuf.Timestamp timestamp = 3;
+    google.protobuf.Duration duration = 4;
+}
+
+//
+// 서비스 명세
+service Echo {
+    rpc echo (EchoObject) returns (EchoObject);
+}
