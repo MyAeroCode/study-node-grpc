@@ -31,3 +31,4 @@ $ npm run-script build CHAPTER_NUMBER
 |    3    | `Other Data Types`             |
 |    4    | `Nested Type`, `Oneof`         |
 |    5    | `Reserved`, `Deprecated`       |
+|    6    | `Stream`                       |
