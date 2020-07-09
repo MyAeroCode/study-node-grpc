@@ -1,9 +1,9 @@
 import { EchoObject, MyNestedBox, MyUnionBox } from "./proto/schema_pb";
-import services from "./proto/schema_grpc_pb";
+import { EchoClient } from "./proto/schema_grpc_pb";
 import grpc from "grpc";
 
 export default async function startClient() {
-    const client = new services.EchoClient(
+    const client = new EchoClient(
         "localhost:50051",
         grpc.credentials.createInsecure()
     );

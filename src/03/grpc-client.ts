@@ -2,11 +2,11 @@ import { EchoObject } from "./proto/schema_pb";
 import { Any } from "google-protobuf/google/protobuf/any_pb";
 import { Timestamp } from "google-protobuf/google/protobuf/timestamp_pb";
 import { Duration } from "google-protobuf/google/protobuf/duration_pb";
-import services from "./proto/schema_grpc_pb";
+import { EchoClient } from "./proto/schema_grpc_pb";
 import grpc from "grpc";
 
 export default async function startClient() {
-    const client = new services.EchoClient(
+    const client = new EchoClient(
         "localhost:50051",
         grpc.credentials.createInsecure()
     );

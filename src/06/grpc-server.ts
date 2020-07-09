@@ -12,7 +12,7 @@ export default function startServer() {
 
     //
     // Unary
-    function echo(
+    async function echo(
         call: ServerUnaryCall<NumberData>,
         callback: (err: any, res: NumberData) => void
     ) {
@@ -21,7 +21,7 @@ export default function startServer() {
 
     //
     // Client Stream
-    function sum(
+    async function sum(
         stream: ServerReadableStream<NumberData>,
         callback: (err: any, res: NumberData) => void
     ) {
@@ -50,7 +50,7 @@ export default function startServer() {
     //
     // Server Stream
     // 콜백이 주어지지 않음에 주의.
-    function mul(stream: ServerWritableStream<NumberData>) {
+    async function mul(stream: ServerWritableStream<NumberData>) {
         //
         // 클라이언트가 보낸 요청객체 확인
         const n = stream.request.getN();
@@ -74,7 +74,7 @@ export default function startServer() {
     //
     // Bidirectional Stream
     // 콜백이 주어지지 않음에 주의.
-    function map(stream: ServerDuplexStream<NumberData, NumberData>) {
+    async function map(stream: ServerDuplexStream<NumberData, NumberData>) {
         //
         // 클라이언트가 데이터를 보낸 경우 실행할 콜백
         stream.on("data", function (chunk: NumberData) {
@@ -104,6 +104,6 @@ export default function startServer() {
     });
 
     server.bind("localhost:50051", grpc.ServerCredentials.createInsecure());
-    console.log("started!");
+    console.log("chapter 06 started!");
     server.start();
 }

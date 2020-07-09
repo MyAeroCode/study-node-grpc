@@ -20,7 +20,7 @@ message HelloResponse {
 
 //
 // 서비스 명세
-service HelloService {
+service Hello {
     //
     // 서비스에 속한 함수.
     rpc hello (HelloRequest) returns (HelloResponse);

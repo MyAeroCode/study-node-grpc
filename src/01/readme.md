@@ -33,7 +33,7 @@ message HelloResponse {
 
 //
 // 서비스 명세
-service HelloService {
+service Hello {
     //
     // 서비스에 속한 함수.
     rpc hello (HelloRequest) returns (HelloResponse);
@@ -78,20 +78,25 @@ cd $SERVER_ROOT;
 `프로토 파일`에 적은 내용은 `인터페이스`이기 때문에 해당 내용을 구현해야 합니다. `HelloService`에 속한 `hello`함수를 구현합니다.
 
 ```ts
-import messages from "./proto/hello_pb";
-import services from "./proto/hello_grpc_pb";
-import grpc from "grpc";
+import { HelloRequest, HelloResponse } from "./proto/schema_pb";
+import { HelloService } from "./proto/schema_grpc_pb";
+import grpc, { ServerUnaryCall } from "grpc";
 
 export default function startServer() {
     const server = new grpc.Server();
 
     //
     // HelloService에 hello함수를 추가한다.
-    server.addService(services.HelloServiceService, {
-        hello: function (call: any, callback: any) {
+    server.addService(HelloService, {
+        //
+        // 비동기, 동기 둘 다 허용됩니다.
+        hello: async function (
+            call: ServerUnaryCall<HelloRequest>,
+            callback: (err: any, res?: HelloResponse) => void
+        ) {
             //
             // 응답 객체를 생성하고, 데이터를 넣는다.
-            const response = new messages.HelloResponse();
+            const response = new HelloResponse();
             const name = call.request.getName();
             const message = `Hello, ${name}!`;
             response.setMessage(message);
@@ -114,6 +119,8 @@ export default function startServer() {
     console.log("started!");
     server.start();
 }
+
+}
 ```
 
 <br/>
@@ -123,22 +130,22 @@ export default function startServer() {
 같은 `프로토 타입`을 사용하여 서버에 요청할 수 있습니다.
 
 ```ts
-import messages from "./proto/hello_pb";
-import services from "./proto/hello_grpc_pb";
+import { HelloRequest } from "./proto/schema_pb";
+import { HelloServiceClient } from "./proto/schema_grpc_pb";
 import grpc from "grpc";
 
 export default function startClient() {
     //
     // 커넥션을 생성한다.
     // 해당 예제에서 보안은 설정하지 않는다.
-    const client = new services.HelloServiceClient(
+    const client = new HelloServiceClient(
         "localhost:50051",
         grpc.credentials.createInsecure()
     );
 
     //
     // 요청 객체를 생성하고, 데이터를 삽입한다.
-    const request = new messages.HelloRequest();
+    const request = new HelloRequest();
     request.setName("World");
 
     //
@@ -150,7 +157,7 @@ export default function startClient() {
         if (err) {
             console.log(`error : ${err}`);
         } else {
-            console.log(`Hello : ${response?.getMessage()}`);
+            console.log(`hello : ${response?.getMessage()}`);
         }
     });
 }

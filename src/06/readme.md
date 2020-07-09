@@ -35,27 +35,20 @@ service StreamTest {
 
 ```ts
 //
-// 단항 -> 단항
-async function callUnaryRPC() {
-    return new Promise((resolve) => {
-        //
-        // 요청 객체 생성
-        const n = 123;
-        const numData = new NumberData();
-        numData.setN(n);
+// 요청 객체 생성
+const n = 123;
+const numData = new NumberData();
+numData.setN(n);
 
-        //
-        // 요청 시도
-        client.echo(numData, function (err, response) {
-            if (err) {
-                console.error(err);
-            } else {
-                console.log(`response : ${response?.getN()}`);
-            }
-            resolve();
-        });
-    });
-}
+//
+// 요청 시도
+client.echo(numData, function (err, response) {
+    if (err) {
+        console.error(err);
+    } else {
+        console.log(`response : ${response?.getN()}`);
+    }
+});
 ```
 
 <br/>
@@ -63,7 +56,7 @@ async function callUnaryRPC() {
 **서버 코드 :**
 
 ```ts
-function echo(
+async function echo(
     call: ServerUnaryCall<NumberData>,
     callback: (err: any, res: NumberData) => void
 ) {
@@ -97,33 +90,26 @@ service StreamTest {
 
 ```ts
 //
-// 스트림 -> 단항
-async function callClientStreamRPC() {
-    return new Promise((resolve) => {
-        //
-        // 쓰기 스트림 생성
-        const stream = client.sum(function (err, response) {
-            if (err) {
-                console.error(err);
-            } else {
-                console.log("response : ", response?.getN());
-                resolve();
-            }
-        });
+// 쓰기 스트림 생성
+const stream = client.sum(function (err, response) {
+    if (err) {
+        console.error(err);
+    } else {
+        console.log("response : ", response?.getN());
+    }
+});
 
-        //
-        // 스트림에 데이터를 전송
-        for (let i = 1; i <= 10; i++) {
-            const numData = new NumberData();
-            numData.setN(i);
-            stream.write(numData);
-        }
-
-        //
-        // 스트림 닫기
-        stream.end();
-    });
+//
+// 스트림에 데이터를 전송
+for (let i = 1; i <= 10; i++) {
+    const numData = new NumberData();
+    numData.setN(i);
+    stream.write(numData);
 }
+
+//
+// 스트림 닫기
+stream.end();
 ```
 
 <br/>
@@ -133,7 +119,7 @@ async function callClientStreamRPC() {
 서버측은 `.on("data")`를 통해 클라이언트의 데이터를 수신하고, `.on("end")`를 통해 클라이언트가 스트림을 끊은 것을 감지할 수 있습니다. 이후에는 `callback`을 통해 단일 응답을 전송합니다.
 
 ```ts
-function sum(
+async function sum(
     stream: ServerReadableStream<NumberData>,
     callback: (err: any, res: NumberData) => void
 ) {
@@ -184,34 +170,27 @@ service StreamTest {
 
 ```ts
 //
-// 단항 -> 스트림
-async function callServerStreamRPC() {
-    return new Promise((resolve) => {
-        //
-        // 요청 객체 생성
-        const n = 2;
-        const numData = new NumberData();
-        numData.setN(n);
-        console.log(`request : ${n}`);
+// 요청 객체 생성
+const n = 2;
+const numData = new NumberData();
+numData.setN(n);
+console.log(`request : ${n}`);
 
-        //
-        // 읽기 스트림 생성
-        const readStream = client.mul(numData);
+//
+// 읽기 스트림 생성
+const readStream = client.mul(numData);
 
-        //
-        // 서버가 데이터를 보낸 경우 실행할 콜백
-        readStream.on("data", function (chunk: NumberData) {
-            console.log(`read : ${chunk.getN()}`);
-        });
+//
+// 서버가 데이터를 보낸 경우 실행할 콜백
+readStream.on("data", function (chunk: NumberData) {
+    console.log(`read : ${chunk.getN()}`);
+});
 
-        //
-        // 서버가 스트림을 닫을 경우 실행할 콜백
-        readStream.on("end", function () {
-            console.log("stream is closed");
-            resolve();
-        });
-    });
-}
+//
+// 서버가 스트림을 닫을 경우 실행할 콜백
+readStream.on("end", function () {
+    console.log("stream is closed");
+});
 ```
 
 <br/>
@@ -222,7 +201,7 @@ async function callServerStreamRPC() {
 //
 // Server Stream
 // 콜백이 주어지지 않음에 주의.
-function mul(stream: ServerWritableStream<NumberData>) {
+async function mul(stream: ServerWritableStream<NumberData>) {
     //
     // 클라이언트가 보낸 요청객체 확인
     const n = stream.request.getN();
@@ -268,45 +247,38 @@ service StreamTest {
 
 ```ts
 //
-// 스트림 <-> 스트림
-async function callBidirectionalStreamRPC() {
-    return new Promise((resolve) => {
-        //
-        // 양방향 스트림 생성
-        const stream = client.map();
+// 양방향 스트림 생성
+const stream = client.map();
 
-        //
-        // 서버가 데이터를 보낸 경우 실행할 콜백
-        stream.on("data", function (chunk: NumberData) {
-            console.log(`read : ${chunk.getN()}`);
-        });
+//
+// 서버가 데이터를 보낸 경우 실행할 콜백
+stream.on("data", function (chunk: NumberData) {
+    console.log(`read : ${chunk.getN()}`);
+});
 
-        //
-        // 클라이언트 또는 서버가 스트림을 닫을 경우 실행할 콜백
-        stream.on("end", function () {
-            console.log("stream is closed");
+//
+// 클라이언트 또는 서버가 스트림을 닫을 경우 실행할 콜백
+stream.on("end", function () {
+    console.log("stream is closed");
 
-            //
-            // 서버 측에서 스트림을 끊었다면,
-            // 클라이언트는 여기서 스트림을 종료해야 한다.
-            stream.end();
-            resolve();
-        });
+    //
+    // 서버 측에서 스트림을 끊었다면,
+    // 클라이언트는 여기서 스트림을 종료해야 한다.
+    stream.end();
+});
 
-        //
-        // 서버에게 데이터를 전송한다
-        for (let i = 1; i <= 10; i++) {
-            console.log(`write ${i}`);
-            const numberData = new NumberData();
-            numberData.setN(i);
-            stream.write(numberData);
-        }
-
-        //
-        // 클라이언트 측에서 스트림을 닫는다.
-        stream.end();
-    });
+//
+// 서버에게 데이터를 전송한다
+for (let i = 1; i <= 10; i++) {
+    console.log(`write ${i}`);
+    const numberData = new NumberData();
+    numberData.setN(i);
+    stream.write(numberData);
 }
+
+//
+// 클라이언트 측에서 스트림을 닫는다.
+stream.end();
 ```
 
 <br/>
@@ -317,7 +289,7 @@ async function callBidirectionalStreamRPC() {
 //
 // Bidirectional Stream
 // 콜백이 주어지지 않음에 주의.
-function map(stream: ServerDuplexStream<NumberData, NumberData>) {
+async function map(stream: ServerDuplexStream<NumberData, NumberData>) {
     //
     // 클라이언트가 데이터를 보낸 경우 실행할 콜백
     stream.on("data", function (chunk: NumberData) {

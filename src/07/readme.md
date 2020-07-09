@@ -75,7 +75,7 @@ function echo_callback_with_error(
 
 ## Detected cancelled
 
-서버는 `call` 객체의 `cancelled` 플래그를 통해 해당 요청이 취소되었는지 확인할 수 있습니다. 아래 서비스는 요청이 취소되지 않는 한, 불필요한 커넥션을 유지합니다.
+클라이언트가 해당 요청을 취소했다고 하더라도, 서버의 동작은 바로 멈추지 않습니다. 서버는 `call` 객체의 `cancelled` 플래그를 통해 해당 요청이 취소되었는지 확인한 뒤, 수동으로 서비스를 중단해야 합니다. 지금까지 했던 변경점도 자동으로 롤백되지 않기 때문에, 롤백도 수동으로 진행해야 합니다.
 
 ```ts
 async function echo_nocallback(

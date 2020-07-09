@@ -1,9 +1,9 @@
 import { EchoObject } from "./proto/schema_pb";
-import services from "./proto/schema_grpc_pb";
+import { EchoClient } from "./proto/schema_grpc_pb";
 import grpc from "grpc";
 
 export default async function startClient() {
-    const client = new services.EchoClient(
+    const client = new EchoClient(
         "localhost:50051",
         grpc.credentials.createInsecure()
     );
@@ -16,21 +16,15 @@ export default async function startClient() {
 
     //
     // 요청 후 콜백에서 처리
-    client.echo(echoRequest, function (err, response) {
-        if (err || response === undefined) {
+    client.echo(echoRequest, function (err, res) {
+        if (err || res === undefined) {
             console.log(`error : ${err}`);
         } else {
-            printEcho1Object(response);
+            console.group(`echoobject`);
+            console.log("raw : ", JSON.stringify(res, null, 4));
+            console.log(`f : ${res.getF()}`);
+            console.log(`g : ${res.getG()}`); // deprecated 되었지만 여전히 사용할 수 있음.
+            console.groupEnd();
         }
     });
-}
-
-//
-// 서버에서 보낸 응답 객체의 값을 콘솔에 출력.
-function printEcho1Object(obj: EchoObject) {
-    console.group(`echoobject`);
-    console.log("raw : ", JSON.stringify(obj, null, 4));
-    console.log(`f : ${obj.getF()}`);
-    console.log(`g : ${obj.getG()}`); // deprecated 되었지만 여전히 사용할 수 있음.
-    console.groupEnd();
 }

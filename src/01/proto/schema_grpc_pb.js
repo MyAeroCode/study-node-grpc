@@ -32,11 +32,11 @@ function deserialize_hello_HelloResponse(buffer_arg) {
 
 //
 // 서비스 명세
-var HelloServiceService = exports.HelloServiceService = {
+var HelloService = exports.HelloService = {
   //
 // 서비스에 속한 함수.
 hello: {
-    path: '/hello.HelloService/hello',
+    path: '/hello.Hello/hello',
     requestStream: false,
     responseStream: false,
     requestType: schema_pb.HelloRequest,
@@ -48,4 +48,4 @@ hello: {
   },
 };
 
-exports.HelloServiceClient = grpc.makeGenericClientConstructor(HelloServiceService);
+exports.HelloClient = grpc.makeGenericClientConstructor(HelloService);

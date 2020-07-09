@@ -1,19 +1,21 @@
-import services from "./proto/schema_grpc_pb";
-import grpc from "grpc";
+import { EchoObject } from "./proto/schema_pb";
+import { EchoService } from "./proto/schema_grpc_pb";
+import grpc, { ServerUnaryCall } from "grpc";
 
 export default function startServer() {
     const server = new grpc.Server();
 
-    function callback(call: any, callback: any) {
-        const request = call.request;
-        callback(null, request);
-    }
-
-    server.addService(services.EchoService, {
-        echo: callback,
+    server.addService(EchoService, {
+        echo: async function echo(
+            call: ServerUnaryCall<EchoObject>,
+            callback: (err: any, res?: EchoObject) => void
+        ) {
+            const request = call.request;
+            callback(null, request);
+        },
     });
 
     server.bind("localhost:50051", grpc.ServerCredentials.createInsecure());
-    console.log("started!");
+    console.log("chapter 04 started!");
     server.start();
 }

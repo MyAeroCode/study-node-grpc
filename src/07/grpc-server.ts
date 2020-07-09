@@ -35,7 +35,7 @@ export default function startServer() {
 
         //
         // 콜백 전에 처리되지 않은 예외를 발생시킴.
-        echo_exception: function (
+        echo_exception: async function (
             call: ServerUnaryCall<EchoObject>,
             callback: (err: any, res?: EchoObject) => void
         ) {
@@ -44,7 +44,7 @@ export default function startServer() {
 
         //
         // 콜백으로 에러를 넘김.
-        echo_callback_with_error: function (
+        echo_callback_with_error: async function (
             call: ServerUnaryCall<EchoObject>,
             callback: (err: any, res?: EchoObject) => void
         ) {
@@ -53,6 +53,6 @@ export default function startServer() {
     });
 
     server.bind("localhost:50051", grpc.ServerCredentials.createInsecure());
-    console.log("started!");
+    console.log("chapter 07 started!");
     server.start();
 }
