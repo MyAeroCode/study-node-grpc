@@ -8,3 +8,4 @@
 |    4    | `Nested Type`, `Oneof`         |
 |    5    | `Reserved`, `Deprecated`       |
 |    6    | `Stream`                       |
+|    7    | `Cancelling an RPC`            |
